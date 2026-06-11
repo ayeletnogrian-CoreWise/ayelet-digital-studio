@@ -175,21 +175,38 @@ fadeTargets.forEach(el => {
 })();
 
 
-/* ── Contact form (static placeholder) ── */
-const contactForm   = document.getElementById('contactForm');
-const formSuccess   = document.getElementById('formSuccess');
+/* ── Contact form → Formspree ── */
+const contactForm  = document.getElementById('contactForm');
+const formSuccess  = document.getElementById('formSuccess');
+const formError    = document.getElementById('formError');
+const formSubmit   = document.getElementById('formSubmit');
 
-contactForm.addEventListener('submit', e => {
+contactForm.addEventListener('submit', async e => {
   e.preventDefault();
 
-  const name    = contactForm.name.value.trim();
-  const phone   = contactForm.phone.value.trim();
-  const message = contactForm.message.value.trim();
+  formSuccess.classList.remove('visible');
+  formError.classList.remove('visible');
+  formSubmit.disabled = true;
+  formSubmit.textContent = 'שולח...';
 
-  if (!name || !phone || !message) return;
+  try {
+    const response = await fetch('https://formspree.io/f/maqzdakj', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(contactForm),
+    });
 
-  // Replace this block with your actual form endpoint (Formspree, Netlify Forms, etc.)
-  contactForm.querySelector('button[type="submit"]').disabled = true;
-  formSuccess.classList.add('visible');
-  contactForm.reset();
+    if (response.ok) {
+      formSuccess.classList.add('visible');
+      contactForm.reset();
+    } else {
+      formError.classList.add('visible');
+      formSubmit.disabled = false;
+      formSubmit.textContent = 'שלחו הודעה';
+    }
+  } catch {
+    formError.classList.add('visible');
+    formSubmit.disabled = false;
+    formSubmit.textContent = 'שלחו הודעה';
+  }
 });
