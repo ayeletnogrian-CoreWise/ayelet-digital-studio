@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ayelet-digital-studio.vercel.app/sitemap.xml
