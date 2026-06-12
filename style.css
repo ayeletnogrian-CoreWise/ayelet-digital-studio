@@ -776,8 +776,7 @@ p {
 }
 
 .project-card {
-  display: flex;
-  gap: 2.5rem;
+  display: block;
   background: var(--white);
   border: 1px solid var(--border-soft);
   border-radius: var(--r-xl);
@@ -790,34 +789,129 @@ p {
   box-shadow: var(--shadow-lg);
 }
 
-/* RTL default: cover on right, body on left */
-/* Alt: reverse — cover on left, body on right */
 .project-card--alt {
-  flex-direction: row-reverse;
+  /* layout is always stacked; class kept for identification */
 }
 
+/* Cover panel — full width, sits above content */
 .project-cover {
-  flex: 0 0 420px;
-  width: 420px;
+  width: 100%;
+  height: 380px;
   background: var(--cream);
   overflow: hidden;
+  position: relative;
 }
 
 .cover-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top center;
   transition: transform 0.5s ease;
   cursor: zoom-in;
+  display: block;
 }
 
 .project-card:hover .cover-img {
-  transform: scale(1.04);
+  transform: scale(1.03);
+}
+
+/* ── Browser mockup cover (website screenshots) ── */
+.project-cover--browser {
+  height: auto;
+  background: #f0ede8;
+  display: flex;
+  flex-direction: column;
+}
+
+.browser-chrome {
+  height: 36px;
+  background: #e6e2db;
+  border-bottom: 1px solid rgba(28,43,72,0.09);
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.b-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.b-dot:nth-child(1) { background: #ff5f57; }
+.b-dot:nth-child(2) { background: #febc2e; }
+.b-dot:nth-child(3) { background: #28c840; }
+
+.b-url {
+  flex: 1;
+  height: 20px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 4px;
+  margin-inline-start: 0.75rem;
+  display: flex;
+  align-items: center;
+  padding: 0 0.6rem;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  direction: ltr;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.project-cover--browser .cover-img {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* ── Phone / mobile frame ── */
+.project-cover--phone {
+  height: 480px;
+  background: linear-gradient(145deg, #ede9f5 0%, var(--cream) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 4rem;
+}
+
+.project-cover--phone .cover-img {
+  width: auto;
+  height: 100%;
+  max-height: 420px;
+  max-width: 220px;
+  object-fit: contain;
+  border-radius: 28px;
+  box-shadow: 0 24px 64px rgba(28,43,72,0.22), 0 0 0 8px rgba(28,43,72,0.06);
+}
+
+/* ── Invitation / card frame ── */
+.project-cover--card {
+  height: 480px;
+  background: linear-gradient(145deg, #f5ebe8 0%, var(--cream) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 4rem;
+}
+
+.project-cover--card .cover-img {
+  width: auto;
+  height: 100%;
+  max-height: 430px;
+  max-width: 250px;
+  object-fit: contain;
+  border-radius: var(--r-md);
+  box-shadow: 0 16px 48px rgba(28,43,72,0.15);
 }
 
 .project-body {
-  flex: 1;
-  padding: 2rem 2rem;
+  padding: 2rem 2.5rem 2.5rem;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -837,12 +931,7 @@ p {
 
 /* ---- Gallery component ---- */
 
-/* Cover images: keep cover for wide screenshots */
-.project-cover .cover-img {
-  object-fit: cover;
-}
-
-/* Contain variant — for portrait invitations & phone mockups */
+/* Contain variant — fallback, now superseded by --browser / --phone / --card */
 .project-cover--contain {
   background: #fffaf7;
   display: flex;
@@ -861,14 +950,14 @@ p {
 /* Gallery grid */
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.1rem;
   margin-bottom: 1.6rem;
 }
 
 /* Tall variant — portrait invitations */
 .gallery-grid--tall {
-  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
 }
 
 /* Gallery item */
@@ -1534,9 +1623,8 @@ p {
     width: 48%;
   }
 
-  .project-cover {
-    flex: 0 0 300px;
-    width: 300px;
+  .project-cover--browser .cover-img {
+    height: 320px;
   }
 
   .about-inner {
@@ -1604,21 +1692,36 @@ p {
     gap: 0.85rem;
   }
 
-  /* Project cards — stack vertically */
-  .project-card,
-  .project-card--alt {
-    flex-direction: column;
-  }
-
+  /* Project cards already stacked on desktop */
   .project-cover {
-    flex: none;
     width: 100%;
-    height: 260px;
+    height: 240px;
   }
 
-  .project-cover--contain {
-    height: 300px;
-    padding: 0.75rem;
+  .project-cover--browser .cover-img {
+    height: 240px;
+  }
+
+  .project-cover--phone {
+    height: 380px;
+    padding: 1.5rem 2rem;
+  }
+
+  .project-cover--card {
+    height: 380px;
+    padding: 1.5rem 2rem;
+  }
+
+  .browser-chrome {
+    height: 28px;
+  }
+
+  .b-url {
+    display: none;
+  }
+
+  .project-body {
+    padding: 1.5rem 1.5rem 2rem;
   }
 
   /* Gallery responsive */
